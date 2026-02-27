@@ -209,12 +209,6 @@ yolo pose train \
   device=0
 ```
 
-### 5.6 车牌字符识别训练
-
-车牌识别训练链接如下：
-
-[车牌识别训练](https://github.com/we0091234/crnn_plate_recognition)
-
 ---
 
 ## 6. ONNX 相关（可选）
@@ -222,7 +216,7 @@ yolo pose train \
 如果你走 ONNX 检测部署，可参考：
 
 - `export_onnx.py`：导出脚本
-- `onnx_detect.py`：ONNX 检测推理脚本
+- `onnx_infer.py`：ONNX 推理脚本
 
 对于 `nms=True` 导出的 pose ONNX，常见输出是 `1x300x14`，字段一般按：
 
@@ -232,7 +226,28 @@ yolo pose train \
 
 该输出已做过 NMS，后处理通常只需做阈值过滤和坐标映射。
 
-## 7. 建议工作流
+---
+
+## 7. 常见问题
+
+### 7.1 推理时报错找不到权重并尝试联网下载
+
+- 请确认 `--detect_model` 指向本地存在的 `.pt` 文件。
+- 当前默认是：`weights/yolo26s-plate-detect.pt`。
+
+### 7.2 识别结果错位或字符异常
+
+- 优先检查关键点顺序是否与训练标注一致。
+- 检查标注是否归一化正确。
+- 检查双层车牌类别是否正确标成 `1`。
+
+### 7.3 中文显示乱码
+
+- 需要 `fonts/platech.ttf` 存在（脚本通过 `cv2ImgAddText` 绘制中文）。
+
+---
+
+## 8. 建议工作流
 
 1. 先用 `detect_rec_plate.py` 跑通端到端。
 2. 确保检测框和 4 点关键点稳定。
